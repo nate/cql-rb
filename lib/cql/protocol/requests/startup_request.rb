@@ -14,7 +14,7 @@ module Cql
       end
 
       def to_s
-        %(STARTUP #@arguments)
+        %(STARTUP #{@arguments.inspect})
       end
 
       private

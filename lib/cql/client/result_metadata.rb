@@ -7,7 +7,7 @@ module Cql
 
       # @private
       def initialize(metadata)
-        @metadata = metadata.each_with_object({}) { |m, h| h[m[2]] = ColumnMetadata.new(*m) }
+        @metadata = metadata.inject({}) { |m, h| m[h[2]] = ColumnMetadata.new(*h); m }
       end
 
       # Returns the column metadata

@@ -14,7 +14,7 @@ module Cql
       end
 
       def to_s
-        %(SUPPORTED #{options})
+        %(SUPPORTED #{options.inspect})
       end
     end
   end

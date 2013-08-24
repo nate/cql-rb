@@ -40,7 +40,7 @@ module Cql
 
       before do
         io_reactor.on_connection do |connection|
-          connection.handle_request do |request|
+          connection.handle_request do |request, _, _|
             response = nil
             if @request_handler
               response = @request_handler.call(request, connection, proc { connection.default_request_handler(request) })
@@ -194,7 +194,7 @@ module Cql
             io_reactor.on_connection do |connection|
               connection[:spec_host_id] = uuid_generator.next
               connection[:spec_data_center] = data_centers[connection.host]
-              connection.handle_request do |request|
+              connection.handle_request do |request, _, _|
                 case request
                 when Protocol::StartupRequest
                   Protocol::ReadyResponse.new
@@ -287,7 +287,7 @@ module Cql
         end
 
         context 'when the server requests authentication' do
-          def accepting_request_handler(request, *)
+          def accepting_request_handler(request, *args)
             case request
             when Protocol::StartupRequest
               Protocol::AuthenticateResponse.new('com.example.Auth')
@@ -296,7 +296,7 @@ module Cql
             end
           end
 
-          def denying_request_handler(request, *)
+          def denying_request_handler(request, *args)
             case request
             when Protocol::StartupRequest
               Protocol::AuthenticateResponse.new('com.example.Auth')
@@ -366,7 +366,7 @@ module Cql
 
       describe '#use' do
         it 'executes a USE query' do
-          handle_request do |request|
+          handle_request do |request, _, _|
             if request.is_a?(Protocol::QueryRequest) && request.cql == 'USE system'
               Protocol::SetKeyspaceResultResponse.new('system')
             end
@@ -394,7 +394,7 @@ module Cql
         end
 
         it 'knows which keyspace it changed to' do
-          handle_request do |request|
+          handle_request do |request, _, _|
             if request.is_a?(Protocol::QueryRequest) && request.cql == 'USE system'
               Protocol::SetKeyspaceResultResponse.new('system')
             end
@@ -410,7 +410,7 @@ module Cql
         end
 
         it 'allows the keyspace name to be quoted' do
-          handle_request do |request|
+          handle_request do |request, _, _|
             if request.is_a?(Protocol::QueryRequest) && request.cql == 'USE "system"'
               Protocol::SetKeyspaceResultResponse.new('system')
             end
@@ -438,7 +438,7 @@ module Cql
 
         context 'with a void CQL query' do
           it 'returns nil' do
-            handle_request do |request|
+            handle_request do |request, _, _|
               if request.is_a?(Protocol::QueryRequest) && request.cql =~ /UPDATE/
                 Protocol::VoidResultResponse.new
               end
@@ -450,7 +450,7 @@ module Cql
 
         context 'with a USE query' do
           it 'returns nil' do
-            handle_request do |request|
+            handle_request do |request, _, _|
               if request.is_a?(Protocol::QueryRequest) && request.cql == 'USE system'
                 Protocol::SetKeyspaceResultResponse.new('system')
               end
@@ -460,7 +460,7 @@ module Cql
           end
 
           it 'knows which keyspace it changed to' do
-            handle_request do |request|
+            handle_request do |request, _, _|
               if request.is_a?(Protocol::QueryRequest) && request.cql == 'USE system'
                 Protocol::SetKeyspaceResultResponse.new('system')
               end
@@ -474,7 +474,7 @@ module Cql
             io_reactor.stop.get
             io_reactor.start.get
 
-            handle_request do |request, connection|
+            handle_request do |request, connection, _|
               if request.is_a?(Protocol::QueryRequest) && request.cql == 'USE system'
                 Protocol::SetKeyspaceResultResponse.new('system')
               end
@@ -509,7 +509,7 @@ module Cql
           end
 
           before do
-            handle_request do |request|
+            handle_request do |request, _, _|
               if request.is_a?(Protocol::QueryRequest) && request.cql =~ /FROM things/
                 Protocol::RowsResultResponse.new(rows, metadata)
               end
@@ -555,7 +555,7 @@ module Cql
 
         context 'when the response is an error' do
           before do
-            handle_request do |request|
+            handle_request do |request, _, _|
               if request.is_a?(Protocol::QueryRequest) && request.cql =~ /FROM things/
                 Protocol::ErrorResponse.new(0xabcd, 'Blurgh')
               end
@@ -588,7 +588,7 @@ module Cql
         end
 
         before do
-          handle_request do |request|
+          handle_request do |request, _, _|
             if request.is_a?(Protocol::PrepareRequest)
               Protocol::PreparedResultResponse.new(id, metadata)
             end
@@ -635,7 +635,7 @@ module Cql
 
         context 'when there is an error preparing the request' do
           it 'returns a failed future' do
-            handle_request do |request|
+            handle_request do |request, _, _|
               if request.is_a?(Protocol::PrepareRequest)
                 Protocol::PreparedResultResponse.new(id, metadata)
               end
@@ -689,7 +689,7 @@ module Cql
         end
 
         it 'complains when #execute of a prepared statement is called after #close' do
-          handle_request do |request|
+          handle_request do |request, _, _|
             if request.is_a?(Protocol::PrepareRequest)
               Protocol::PreparedResultResponse.new('A' * 32, [])
             end

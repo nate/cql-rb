@@ -122,11 +122,12 @@ module Cql
           end
 
           it 'passes the error that caused the protocol handler to close to the failed requests' do
+            raised_error = StandardError.new('Blurgh')
             error = nil
             future = protocol_handler.send_request(request)
             future.on_failure { |e| error = e }
-            connection.closed_listener.call(StandardError.new('Blurgh'))
-            error.should == StandardError.new('Blurgh')
+            connection.closed_listener.call(raised_error)
+            error.should == raised_error
           end
         end
 

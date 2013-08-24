@@ -13,7 +13,7 @@ module Cql
       end
 
       def to_s
-        %(REGISTER #@events)
+        %(REGISTER #{@events.inspect})
       end
     end
   end

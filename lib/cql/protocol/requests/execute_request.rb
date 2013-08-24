@@ -21,7 +21,7 @@ module Cql
 
       def to_s
         id = @id.each_byte.map { |x| x.to_s(16) }.join('')
-        %(EXECUTE #{id} #@values #{@consistency.to_s.upcase})
+        %(EXECUTE #{id} #{@values.inspect} #{@consistency.to_s.upcase})
       end
 
       def eql?(rq)

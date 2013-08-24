@@ -15,7 +15,7 @@ module Cql
       end
 
       def to_s
-        %(CREDENTIALS #{@credentials})
+        %(CREDENTIALS #{@credentials.inspect})
       end
 
       def eql?(rq)

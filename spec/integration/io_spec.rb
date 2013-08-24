@@ -41,7 +41,7 @@ describe 'An IO reactor' do
       fake_server.await_connects!(10)
       fake_server.broadcast!('hello world')
       await { protocol_handlers.all? { |c| c.data.bytesize > 0 } }
-      protocol_handlers.sample.data.should == 'hello world'
+      protocol_handlers[Kernel.rand(protocol_handlers.size)].data.should == 'hello world'
     end
   end
 

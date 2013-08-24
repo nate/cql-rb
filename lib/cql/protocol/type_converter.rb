@@ -134,8 +134,7 @@ module Cql
       end
 
       def bytes_to_ascii(buffer, size_bytes)
-        bytes = size_bytes == 4 ? read_bytes!(buffer) : read_short_bytes!(buffer)
-        bytes ? bytes.force_encoding(::Encoding::ASCII) : nil
+        size_bytes == 4 ? read_bytes!(buffer) : read_short_bytes!(buffer)
       end
 
       def bytes_to_bigint(buffer, size_bytes)
@@ -181,8 +180,7 @@ module Cql
       end
 
       def bytes_to_varchar(buffer, size_bytes)
-        bytes = size_bytes == 4 ? read_bytes!(buffer) : read_short_bytes!(buffer)
-        bytes ? bytes.force_encoding(::Encoding::UTF_8) : nil
+        size_bytes == 4 ? read_bytes!(buffer) : read_short_bytes!(buffer)
       end
 
       def bytes_to_varint(buffer, size_bytes)
@@ -237,11 +235,10 @@ module Cql
       end
 
       def ascii_to_bytes(io, value, size_bytes)
-        v = value && value.encode(::Encoding::ASCII)
         if size_bytes == 4
-          write_bytes(io, v)
+          write_bytes(io, value)
         else
-          write_short_bytes(io, v)
+          write_short_bytes(io, value)
         end
       end
 
@@ -255,11 +252,10 @@ module Cql
       end
 
       def blob_to_bytes(io, value, size_bytes)
-        v = value && value.encode(::Encoding::BINARY)
         if size_bytes == 4
-          write_bytes(io, v)
+          write_bytes(io, value)
         else
-          write_short_bytes(io, v)
+          write_short_bytes(io, value)
         end
       end
 
@@ -318,11 +314,10 @@ module Cql
       end
 
       def varchar_to_bytes(io, value, size_bytes)
-        v = value && value.encode(::Encoding::UTF_8)
         if size_bytes == 4
-          write_bytes(io, v)
+          write_bytes(io, value)
         else
-          write_short_bytes(io, v)
+          write_short_bytes(io, value)
         end
       end
 

@@ -15,7 +15,7 @@ module Cql
       end
 
       def to_s
-        %(RESULT ROWS #@metadata #@rows)
+        %(RESULT ROWS #{@metadata.inspect} #{@rows.inspect})
       end
 
       private

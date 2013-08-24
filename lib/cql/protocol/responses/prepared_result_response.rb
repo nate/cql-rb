@@ -16,7 +16,7 @@ module Cql
       end
 
       def to_s
-        %(RESULT PREPARED #{id.each_byte.map { |x| x.to_s(16) }.join('')} #@metadata)
+        %(RESULT PREPARED #{id.each_byte.map { |x| x.to_s(16) }.join('')} #{@metadata.inspect})
       end
     end
   end

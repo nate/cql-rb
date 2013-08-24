@@ -24,7 +24,9 @@ module Cql
       describe '#to_s' do
         it 'returns a pretty string' do
           request = CredentialsRequest.new('foo' => 'bar', 'hello' => 'world')
-          request.to_s.should == 'CREDENTIALS {"foo"=>"bar", "hello"=>"world"}'
+          match = request.to_s.match(/\ACREDENTIALS (\{.+\})\Z/)
+          match.should_not be_nil
+          eval(match[1]).should == {"foo"=>"bar", "hello"=>"world"}
         end
       end
 

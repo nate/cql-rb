@@ -168,7 +168,7 @@ module Cql
 
       def discover_peers(seed_connections, initial_keyspace)
         connected_seeds = seed_connections.select(&:connected?)
-        connection = connected_seeds.sample
+        connection = connected_seeds[Kernel.rand(connected_seeds.size)]
         return Future.completed([]) unless connection
         request = Protocol::QueryRequest.new('SELECT data_center, host_id, rpc_address FROM system.peers', :one)
         peer_info = execute_request(request, connection)
@@ -278,7 +278,7 @@ module Cql
       end
 
       def execute_request(request, connection=nil)
-        f = @request_runner.execute(connection || @connections.sample, request)
+        f = @request_runner.execute(connection || @connections[Kernel.rand(@connections.size)], request)
         f.map do |result|
           if result.is_a?(KeyspaceChanged)
             use(result.keyspace)
