@@ -562,7 +562,7 @@ module Cql
               'inet_column' => nil,
               'list_column' => nil,
               'map_column' => nil,
-              'set_column' => nil,
+              'set_column' => nil
             )
           end
 
