@@ -22,3 +22,7 @@ group :test do
   gem 'simplecov'
   gem 'coveralls'
 end
+
+group :development, :test do
+  gem 'ruby-debug'
+end
