@@ -27,15 +27,15 @@ module Cql
       end
 
       before do
-        socket_impl.stub(:getaddrinfo)
-          .with('example.com', 55555, nil, Socket::SOCK_STREAM)
-          .and_return([[nil, 'PORT', nil, 'IP1', 'FAMILY1', 'TYPE1'], [nil, 'PORT', nil, 'IP2', 'FAMILY2', 'TYPE2']])
-        socket_impl.stub(:sockaddr_in)
-          .with('PORT', 'IP1')
-          .and_return('SOCKADDR1')
-        socket_impl.stub(:new)
-          .with('FAMILY1', 'TYPE1', 0)
-          .and_return(socket)
+        socket_impl.stub(:getaddrinfo).
+          with('example.com', 55555, nil, Socket::SOCK_STREAM).
+          and_return([[nil, 'PORT', nil, 'IP1', 'FAMILY1', 'TYPE1'], [nil, 'PORT', nil, 'IP2', 'FAMILY2', 'TYPE2']])
+        socket_impl.stub(:sockaddr_in).
+          with('PORT', 'IP1').
+          and_return('SOCKADDR1')
+        socket_impl.stub(:new).
+          with('FAMILY1', 'TYPE1', 0).
+          and_return(socket)
       end
 
       describe '#connect' do
@@ -115,12 +115,12 @@ module Cql
 
         context 'when #connect_nonblock raises EINVAL' do
           before do
-            socket_impl.stub(:sockaddr_in)
-              .with('PORT', 'IP2')
-              .and_return('SOCKADDR2')
-            socket_impl.stub(:new)
-              .with('FAMILY2', 'TYPE2', 0)
-              .and_return(socket)
+            socket_impl.stub(:sockaddr_in).
+              with('PORT', 'IP2').
+              and_return('SOCKADDR2')
+            socket_impl.stub(:new).
+              with('FAMILY2', 'TYPE2', 0).
+              and_return(socket)
             socket.stub(:close)
           end
 
