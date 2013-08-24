@@ -19,7 +19,7 @@ module Cql
       describe '#to_bytes' do
         context 'when encoding normal value' do
           TYPES.each do |type|
-            it "encodes a null #{type.upcase}" do
+            it "encodes a null #{type.to_s.upcase}" do
               converter.to_bytes(buffer, type, nil, 4).should == "\xff\xff\xff\xff"
             end
           end
@@ -41,7 +41,7 @@ module Cql
 
         context 'when encoding collection values' do
           TYPES.each do |type|
-            it "encodes a null #{type.upcase}" do
+            it "encodes a null #{type.to_s.upcase}" do
               converter.to_bytes(buffer, type, nil, 2).should == "\xff\xff"
             end
           end
