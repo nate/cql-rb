@@ -20,7 +20,7 @@ module Cql
         bytes.each_byte do |b|
           n = (n << 8) | b
         end
-        if signed && bytes.getbyte(0) & 0x80 == 0x80
+        if signed && bytes[0] & 0x80 == 0x80
           n -= 2**(bytes.length * 8)
         end
         n
@@ -93,18 +93,14 @@ module Cql
 
       def read_string!(buffer)
         length = read_short!(buffer)
-        string = buffer.read(length)
-        string.force_encoding(::Encoding::UTF_8)
-        string
+        buffer.read(length)
       rescue RangeError => e
         raise DecodingError, "Not enough bytes available to decode a string: #{e.message}", e.backtrace
       end
 
       def read_long_string!(buffer)
         length = read_int!(buffer)
-        string = buffer.read(length)
-        string.force_encoding(::Encoding::UTF_8)
-        string
+        buffer.read(length)
       rescue RangeError => e
         raise DecodingError, "Not enough bytes available to decode a long string: #{e.message}", e.backtrace
       end
