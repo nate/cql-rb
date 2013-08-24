@@ -72,19 +72,19 @@ module Cql
           end
 
           it 'connects to all hosts' do
-            c = described_class.new(connection_options.merge(hosts: %w[h1.example.com h2.example.com h3.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
             c.connect.get
             connections.should have(3).items
           end
 
           it 'connects to all hosts, when given as a comma-sepatated string' do
-            c = described_class.new(connection_options.merge(host: 'h1.example.com,h2.example.com,h3.example.com'))
+            c = described_class.new(connection_options.merge(:host => 'h1.example.com,h2.example.com,h3.example.com'))
             c.connect.get
             connections.should have(3).items
           end
 
           it 'only connects to each host once' do
-            c = described_class.new(connection_options.merge(hosts: %w[h1.example.com h2.example.com h2.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h2.example.com]))
             c.connect.get
             connections.should have(2).items
           end
@@ -92,7 +92,7 @@ module Cql
           it 'succeeds even if only one of the connections succeeded' do
             io_reactor.node_down('h1.example.com')
             io_reactor.node_down('h3.example.com')
-            c = described_class.new(connection_options.merge(hosts: %w[h1.example.com h2.example.com h2.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h2.example.com]))
             c.connect.get
             connections.should have(1).items
           end
@@ -101,7 +101,7 @@ module Cql
             io_reactor.node_down('h1.example.com')
             io_reactor.node_down('h2.example.com')
             io_reactor.node_down('h3.example.com')
-            c = described_class.new(connection_options.merge(hosts: %w[h1.example.com h2.example.com h2.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h2.example.com]))
             expect { c.connect.get }.to raise_error(Io::ConnectionError)
           end
         end
@@ -131,7 +131,7 @@ module Cql
           io_reactor.stop.get
           io_reactor.start.get
 
-          c = described_class.new(connection_options.merge(hosts: %w[h1.example.com h2.example.com h3.example.com]))
+          c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
           c.connect.get
           connections.each do |cc|
             cc.requests.first.should be_a(Protocol::StartupRequest)
@@ -233,19 +233,19 @@ module Cql
           it 'connects to the other nodes in same data centers as the seed nodes' do
             data_centers['host2'] = 'dc2'
             data_centers[additional_nodes[1]] = 'dc2'
-            c = described_class.new(connection_options.merge(hosts: %w[host1 host2]))
+            c = described_class.new(connection_options.merge(:hosts => %w[host1 host2]))
             c.connect.get
             connections.should have(3).items
           end
 
           it 'only connects to the other nodes in the cluster it is not already connected do' do
-            c = described_class.new(connection_options.merge(hosts: %w[host1 host2]))
+            c = described_class.new(connection_options.merge(:hosts => %w[host1 host2]))
             c.connect.get
             connections.should have(3).items
           end
 
           it 'handles the case when it is already connected to all nodes' do
-            c = described_class.new(connection_options.merge(hosts: %w[host1 host2 host3 host4]))
+            c = described_class.new(connection_options.merge(:hosts => %w[host1 host2 host3 host4]))
             c.connect.get
             connections.should have(4).items
           end
@@ -310,7 +310,7 @@ module Cql
           end
 
           it 'sends credentials' do
-            client = described_class.new(connection_options.merge(credentials: {'username' => 'foo', 'password' => 'bar'}))
+            client = described_class.new(connection_options.merge(:credentials => {'username' => 'foo', 'password' => 'bar'}))
             client.connect.get
             request = requests.find { |rq| rq == Protocol::CredentialsRequest.new('username' => 'foo', 'password' => 'bar') }
             request.should_not be_nil, 'expected a credentials request to have been sent'
@@ -323,13 +323,13 @@ module Cql
 
           it 'raises an error when the server responds with an error to the credentials request' do
             handle_request(&method(:denying_request_handler))
-            client = described_class.new(connection_options.merge(credentials: {'username' => 'foo', 'password' => 'bar'}))
+            client = described_class.new(connection_options.merge(:credentials => {'username' => 'foo', 'password' => 'bar'}))
             expect { client.connect.get }.to raise_error(AuthenticationError)
           end
 
           it 'shuts down the client when there is an authentication error' do
             handle_request(&method(:denying_request_handler))
-            client = described_class.new(connection_options.merge(credentials: {'username' => 'foo', 'password' => 'bar'}))
+            client = described_class.new(connection_options.merge(:credentials => {'username' => 'foo', 'password' => 'bar'}))
             client.connect.get rescue nil
             client.should_not be_connected
             io_reactor.should_not be_running
@@ -381,7 +381,7 @@ module Cql
           io_reactor.stop.get
           io_reactor.start.get
 
-          c = described_class.new(connection_options.merge(hosts: %w[h1.example.com h2.example.com h3.example.com]))
+          c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
           c.connect.get
 
           c.use('system').get
@@ -480,7 +480,7 @@ module Cql
               end
             end
 
-            c = described_class.new(connection_options.merge(hosts: %w[h1.example.com h2.example.com h3.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
             c.connect.get
 
             c.execute('USE system', :one).get

@@ -67,13 +67,13 @@ describe 'An IO reactor' do
     end
 
     it 'can set a value' do
-      pending('Redis not running', unless: protocol_handler)
+      pending('Redis not running', :unless => protocol_handler)
       response = protocol_handler.send_request('SET', 'foo', 'bar').get
       response.should == 'OK'
     end
 
     it 'can get a value' do
-      pending('Redis not running', unless: protocol_handler)
+      pending('Redis not running', :unless => protocol_handler)
       f = protocol_handler.send_request('SET', 'foo', 'bar').flat_map do
         protocol_handler.send_request('GET', 'foo')
       end
@@ -81,7 +81,7 @@ describe 'An IO reactor' do
     end
 
     it 'can delete values' do
-      pending('Redis not running', unless: protocol_handler)
+      pending('Redis not running', :unless => protocol_handler)
       f = protocol_handler.send_request('SET', 'hello', 'world').flat_map do
         protocol_handler.send_request('DEL', 'hello')
       end
@@ -89,7 +89,7 @@ describe 'An IO reactor' do
     end
 
     it 'handles nil values' do
-      pending('Redis not running', unless: protocol_handler)
+      pending('Redis not running', :unless => protocol_handler)
       f = protocol_handler.send_request('DEL', 'hello').flat_map do
         protocol_handler.send_request('GET', 'hello')
       end
@@ -97,13 +97,13 @@ describe 'An IO reactor' do
     end
 
     it 'handles errors' do
-      pending('Redis not running', unless: protocol_handler)
+      pending('Redis not running', :unless => protocol_handler)
       f = protocol_handler.send_request('SET', 'foo')
       expect { f.get }.to raise_error("ERR wrong number of arguments for 'set' command")
     end
 
     it 'handles replies with multiple elements' do
-      pending('Redis not running', unless: protocol_handler)
+      pending('Redis not running', :unless => protocol_handler)
       f = protocol_handler.send_request('DEL', 'stuff')
       f.get
       f = protocol_handler.send_request('RPUSH', 'stuff', 'hello', 'world')
@@ -113,7 +113,7 @@ describe 'An IO reactor' do
     end
 
     it 'handles nil values when reading multiple elements' do
-      pending('Redis not running', unless: protocol_handler)
+      pending('Redis not running', :unless => protocol_handler)
       protocol_handler.send_request('DEL', 'things')
       protocol_handler.send_request('HSET', 'things', 'hello', 'world')
       f = protocol_handler.send_request('HMGET', 'things', 'hello', 'foo')

@@ -11,7 +11,7 @@ module Cql
       end
 
       let :async_statement do
-        stub(:async_statement, metadata: metadata)
+        stub(:async_statement, :metadata => metadata)
       end
 
       let :metadata do

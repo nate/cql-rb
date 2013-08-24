@@ -131,14 +131,14 @@ describe 'Protocol parsing and communication' do
       end
 
       it 'sends STARTUP and receives AUTHENTICATE' do
-        pending('authentication not configured', unless: authentication_enabled) do
+        pending('authentication not configured', :unless => authentication_enabled) do
           response = raw_execute_request(Cql::Protocol::StartupRequest.new)
           response.should be_a(Cql::Protocol::AuthenticateResponse)
         end
       end
 
       it 'ignores the AUTHENTICATE response and receives ERROR' do
-        pending('authentication not configured', unless: authentication_enabled) do
+        pending('authentication not configured', :unless => authentication_enabled) do
           raw_execute_request(Cql::Protocol::StartupRequest.new)
           response = raw_execute_request(Cql::Protocol::RegisterRequest.new('TOPOLOGY_CHANGE'))
           response.code.should == 10
@@ -153,7 +153,7 @@ describe 'Protocol parsing and communication' do
       end
 
       it 'sends bad username and password in CREDENTIALS and receives ERROR' do
-        pending('authentication not configured', unless: authentication_enabled) do
+        pending('authentication not configured', :unless => authentication_enabled) do
           raw_execute_request(Cql::Protocol::StartupRequest.new)
           response = raw_execute_request(Cql::Protocol::CredentialsRequest.new('username' => 'foo', 'password' => 'bar'))
           response.code.should == 0x100

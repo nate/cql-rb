@@ -109,12 +109,12 @@ describe 'A CQL client' do
 
   context 'with authentication' do
     let :client do
-      stub(:client, connect: nil, close: nil)
+      stub(:client, :connect => nil, :close => nil)
     end
 
     let :authentication_enabled do
       begin
-        Cql::Client.connect(connection_options.merge(credentials: nil))
+        Cql::Client.connect(connection_options.merge(:credentials => nil))
         false
       rescue Cql::AuthenticationError
         true
@@ -122,20 +122,20 @@ describe 'A CQL client' do
     end
 
     it 'sends credentials given in :credentials' do
-      client = Cql::Client.connect(connection_options.merge(credentials: {username: 'cassandra', password: 'cassandra'}))
+      client = Cql::Client.connect(connection_options.merge(:credentials => {:username => 'cassandra', :password => 'cassandra'}))
       client.execute('SELECT * FROM system.schema_keyspaces')
     end
 
     it 'raises an error when no credentials have been given' do
-      pending('authentication not configured', unless: authentication_enabled) do
-        expect { Cql::Client.connect(connection_options.merge(credentials: nil)) }.to raise_error(Cql::AuthenticationError)
+      pending('authentication not configured', :unless => authentication_enabled) do
+        expect { Cql::Client.connect(connection_options.merge(:credentials => nil)) }.to raise_error(Cql::AuthenticationError)
       end
     end
 
     it 'raises an error when the credentials are bad' do
-      pending('authentication not configured', unless: authentication_enabled) do
+      pending('authentication not configured', :unless => authentication_enabled) do
         expect {
-          Cql::Client.connect(connection_options.merge(credentials: {username: 'foo', password: 'bar'}))
+          Cql::Client.connect(connection_options.merge(:credentials => {:username => 'foo', :password => 'bar'}))
         }.to raise_error(Cql::AuthenticationError)
       end
     end
@@ -151,12 +151,12 @@ describe 'A CQL client' do
     end
 
     it 'fails gracefully when connecting to the Thrift port' do
-      opts = connection_options.merge(port: 9160)
+      opts = connection_options.merge(:port => 9160)
       expect { Cql::Client.connect(opts) }.to raise_error(Cql::IoError)
     end
 
     it 'fails gracefully when connecting to something that does not run C*' do
-      expect { Cql::Client.connect(host: 'google.com') }.to raise_error(Cql::Io::ConnectionTimeoutError)
+      expect { Cql::Client.connect(:host => 'google.com') }.to raise_error(Cql::Io::ConnectionTimeoutError)
     end
   end
 end

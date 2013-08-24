@@ -15,7 +15,7 @@ module Cql
       end
 
       let :future do
-        stub(:future, get: nil)
+        stub(:future, :get => nil)
       end
 
       describe '#connect' do
@@ -81,7 +81,7 @@ module Cql
         it 'calls #prepare on the async client, waits for the result and returns a SynchronousFuture' do
           result = stub(:result)
           metadata = stub(:metadata)
-          async_statement = stub(:async_statement, metadata: metadata)
+          async_statement = stub(:async_statement, :metadata => metadata)
           another_future = stub(:another_future)
           async_client.stub(:prepare).with('SELECT * FROM something').and_return(future)
           future.stub(:get).and_return(async_statement)

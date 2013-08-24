@@ -20,7 +20,7 @@ module Cql
   #
   # @example Connecting and changing to a keyspace
   #   # create a client and connect to two Cassandra nodes
-  #   client = Cql::Client.connect(host: 'node01.cassandra.local,node02.cassandra.local')
+  #   client = Cql::Client.connect(:host => 'node01.cassandra.local,node02.cassandra.local')
   #   # change to a keyspace
   #   client.use('stuff')
   #

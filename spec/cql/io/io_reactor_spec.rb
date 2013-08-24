@@ -7,7 +7,7 @@ module Cql
   module Io
     describe IoReactor do
       let :reactor do
-        described_class.new(protocol_handler_factory, selector: selector, clock: clock)
+        described_class.new(protocol_handler_factory, :selector => selector, :clock => clock)
       end
 
       let :protocol_handler_factory do
@@ -19,7 +19,7 @@ module Cql
       end
 
       let :clock do
-        stub(:clock, now: 0)
+        stub(:clock, :now => 0)
       end
 
       describe '#start' do
@@ -214,7 +214,7 @@ module Cql
 
     describe IoLoopBody do
       let :loop_body do
-        described_class.new(selector: selector, clock: clock)
+        described_class.new(:selector => selector, :clock => clock)
       end
 
       let :selector do
@@ -222,11 +222,11 @@ module Cql
       end
 
       let :clock do
-        stub(:clock, now: 0)
+        stub(:clock, :now => 0)
       end
 
       let :socket do
-        stub(:socket, connected?: false, connecting?: false, writable?: false, closed?: false)
+        stub(:socket, :connected? => false, :connecting? => false, :writable? => false, :closed? => false)
       end
 
       describe '#tick' do
@@ -319,8 +319,8 @@ module Cql
 
       describe '#close_sockets' do
         it 'closes all sockets' do
-          socket1 = stub(:socket1, closed?: false)
-          socket2 = stub(:socket2, closed?: false)
+          socket1 = stub(:socket1, :closed? => false)
+          socket2 = stub(:socket2, :closed? => false)
           socket1.should_receive(:close)
           socket2.should_receive(:close)
           loop_body.add_socket(socket1)
@@ -329,8 +329,8 @@ module Cql
         end
 
         it 'closes all sockets, even when one of them raises an error' do
-          socket1 = stub(:socket1, closed?: false)
-          socket2 = stub(:socket2, closed?: false)
+          socket1 = stub(:socket1, :closed? => false)
+          socket2 = stub(:socket2, :closed? => false)
           socket1.stub(:close).and_raise('Blurgh')
           socket2.should_receive(:close)
           loop_body.add_socket(socket1)

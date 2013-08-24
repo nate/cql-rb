@@ -14,7 +14,7 @@ class CqlExecutor
   end
 
   def run(io)
-    @client = Cql::Client.connect(host: @options[:host], port: @options[:port])
+    @client = Cql::Client.connect(:host => @options[:host], :port => @options[:port])
 
     # TODO register for events
 

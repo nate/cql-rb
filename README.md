@@ -20,7 +20,7 @@ If you're running Cassandra 1.2.5 the native transport protocol is enabled by de
 ```ruby
 require 'cql'
 
-client = Cql::Client.connect(host: 'cassandra.example.com')
+client = Cql::Client.connect(:host => 'cassandra.example.com')
 client.use('system')
 rows = client.execute('SELECT keyspace_name, columnfamily_name FROM schema_columnfamilies')
 rows.each do |row|
