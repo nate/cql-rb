@@ -3,6 +3,10 @@
 [![Build Status](https://travis-ci.org/iconara/cql-rb.png?branch=master)](https://travis-ci.org/iconara/cql-rb)
 [![Coverage Status](https://coveralls.io/repos/iconara/cql-rb/badge.png)](https://coveralls.io/r/iconara/cql-rb)
 
+# WARNING: RUBY 1.8.7 ENTERPRISE EDITION ONLY
+
+I backported this to REE, use at your own risk. Some tests are still failing and I can't figure them out, but I also can't make the client library break with our usage.
+
 # Requirements
 
 Cassandra 1.2 with the native transport protocol turned on and a modern Ruby. It's tested continuously in Travis with Ruby 1.9.3, 2.0.0, and JRuby 1.7.x stable and head.
