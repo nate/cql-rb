@@ -34,7 +34,7 @@ module Cql
         parts << ((@n >> (16 * 4)) & 0xffff).to_s(16).rjust(4, '0')
         parts << ((@n >> (12 * 4)) & 0xffff).to_s(16).rjust(4, '0')
         parts << (@n & 0xffffffffffff).to_s(16).rjust(12, '0')
-        parts.join('-').force_encoding(::Encoding::ASCII)
+        parts.join('-')
       end
     end
 

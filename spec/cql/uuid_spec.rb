@@ -27,7 +27,7 @@ module Cql
       end
 
       it 'can be created from a number' do
-        Uuid.new(276263553384940695775376958868900023510).to_s.should == 'cfd66ccc-d857-4e90-b1e5-df98a3d40cd6'.force_encoding(::Encoding::ASCII)
+        Uuid.new(276263553384940695775376958868900023510).to_s.should == 'cfd66ccc-d857-4e90-b1e5-df98a3d40cd6'
       end
     end
 
