@@ -23,13 +23,7 @@ module Cql
       if bytes.is_a?(self.class)
         bytes.append_to(self)
       else
-        bytes = bytes.to_s
-        unless bytes.ascii_only?
-          bytes = bytes.dup.force_encoding(::Encoding::BINARY)
-        end
-        retag = @write_buffer.empty?
         @write_buffer << bytes
-        @write_buffer.force_encoding(::Encoding::BINARY) if retag
         @length += bytes.bytesize
       end
       self
@@ -62,51 +56,18 @@ module Cql
 
     def read_int
       raise RangeError, "4 bytes required to read an int, but only #{@length} available" if @length < 4
-      if @offset >= @read_buffer.bytesize
-        swap_buffers
-      end
-      if @read_buffer.bytesize >= @offset + 4
-        i0 = @read_buffer.getbyte(@offset + 0)
-        i1 = @read_buffer.getbyte(@offset + 1)
-        i2 = @read_buffer.getbyte(@offset + 2)
-        i3 = @read_buffer.getbyte(@offset + 3)
-        @offset += 4
-        @length -= 4
-      else
-        i0 = read_byte
-        i1 = read_byte
-        i2 = read_byte
-        i3 = read_byte
-      end
-      (i0 << 24) | (i1 << 16) | (i2 << 8) | i3
+      read(4).unpack("N").first
     end
 
     def read_short
       raise RangeError, "2 bytes required to read a short, but only #{@length} available" if @length < 2
-      if @offset >= @read_buffer.bytesize
-        swap_buffers
-      end
-      if @read_buffer.bytesize >= @offset + 2
-        i0 = @read_buffer.getbyte(@offset + 0)
-        i1 = @read_buffer.getbyte(@offset + 1)
-        @offset += 2
-        @length -= 2
-      else
-        i0 = read_byte
-        i1 = read_byte
-      end
-      (i0 << 8) | i1
+      read(2).unpack("n").first
     end
 
     def read_byte(signed=false)
       raise RangeError, "No bytes available to read byte" if empty?
-      if @offset >= @read_buffer.bytesize
-        swap_buffers
-      end
-      b = @read_buffer.getbyte(@offset)
+      b = read(1)[0]
       b = (b & 0x7f) - (b & 0x80) if signed
-      @offset += 1
-      @length -= 1
       b
     end
 

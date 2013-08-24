@@ -68,13 +68,12 @@ module Cql
 
       it 'stores its bytes as binary' do
         buffer.append('hällö').length.should == 7
-        buffer.to_s.encoding.should == ::Encoding::BINARY
       end
 
       it 'handles appending with multibyte strings' do
         buffer.append('hello')
         buffer.append('würld')
-        buffer.to_s.should == 'hellowürld'.force_encoding(::Encoding::BINARY)
+        buffer.to_s.should == 'hellowürld'
       end
 
       it 'handles appending with another byte buffer' do
@@ -154,7 +153,7 @@ module Cql
     describe '#inspect' do
       it 'returns the bytes wrapped in ByteBuffer(...)' do
         buffer.append("\xca\xfe")
-        buffer.inspect.should == '#<Cql::ByteBuffer: "\xCA\xFE">'
+        buffer.inspect.should == '#<Cql::ByteBuffer: "\312\376">'
       end
     end
 
@@ -194,13 +193,6 @@ module Cql
         buffer.append('hello')
         expect { buffer.read(23423543) }.to raise_error(RangeError)
         expect { buffer.discard(5).read(1) }.to raise_error(RangeError)
-      end
-
-      it 'returns a string with binary encoding' do
-        buffer.append('hello')
-        buffer.read(4).encoding.should == ::Encoding::BINARY
-        buffer.append('∆')
-        buffer.read(2).encoding.should == ::Encoding::BINARY
       end
     end
 
