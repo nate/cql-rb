@@ -56,18 +56,51 @@ module Cql
 
     def read_int
       raise RangeError, "4 bytes required to read an int, but only #{@length} available" if @length < 4
-      read(4).unpack("N").first
+      if @offset >= @read_buffer.bytesize
+        swap_buffers
+      end
+      if @read_buffer.bytesize >= @offset + 4
+        i0 = @read_buffer[@offset + 0]
+        i1 = @read_buffer[@offset + 1]
+        i2 = @read_buffer[@offset + 2]
+        i3 = @read_buffer[@offset + 3]
+        @offset += 4
+        @length -= 4
+      else
+        i0 = read_byte
+        i1 = read_byte
+        i2 = read_byte
+        i3 = read_byte
+      end
+      (i0 << 24) | (i1 << 16) | (i2 << 8) | i3
     end
 
     def read_short
       raise RangeError, "2 bytes required to read a short, but only #{@length} available" if @length < 2
-      read(2).unpack("n").first
+      if @offset >= @read_buffer.bytesize
+        swap_buffers
+      end
+      if @read_buffer.bytesize >= @offset + 2
+        i0 = @read_buffer[@offset + 0]
+        i1 = @read_buffer[@offset + 1]
+        @offset += 2
+        @length -= 2
+      else
+        i0 = read_byte
+        i1 = read_byte
+      end
+      (i0 << 8) | i1
     end
 
     def read_byte(signed=false)
       raise RangeError, "No bytes available to read byte" if empty?
-      b = read(1)[0]
+      if @offset >= @read_buffer.bytesize
+        swap_buffers
+      end
+      b = @read_buffer[@offset]
       b = (b & 0x7f) - (b & 0x80) if signed
+      @offset += 1
+      @length -= 1
       b
     end
 
