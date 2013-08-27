@@ -84,7 +84,7 @@ module Cql
             stub(:protocol_handler)
           end
           reactor.start.get
-          reactor.connect('example.com', 9999, 5)
+          reactor.connect('localhost', 9999, 5)
           reactor.stop.get
           connection.should be_closed
         end
@@ -167,15 +167,15 @@ module Cql
 
         it 'returns a future that resolves to a new protocol handler' do
           reactor.start.get
-          f = reactor.connect('example.com', 9999, 5)
+          f = reactor.connect('localhost', 9999, 5)
           f.get.should equal(protocol_handler)
         end
 
         it 'returns a new protocol handler which wraps a socket handler' do
           reactor.start.get
-          protocol_handler = reactor.connect('example.com', 9999, 5).get
+          protocol_handler = reactor.connect('localhost', 9999, 5).get
           protocol_handler.connection.should_not be_nil
-          protocol_handler.connection.host.should == 'example.com'
+          protocol_handler.connection.host.should == 'localhost'
           protocol_handler.connection.port.should == 9999
           protocol_handler.connection.connection_timeout.should == 5
         end

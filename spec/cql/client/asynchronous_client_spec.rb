@@ -11,7 +11,7 @@ module Cql
       end
 
       let :connection_options do
-        {:host => 'example.com', :port => 12321, :io_reactor => io_reactor}
+        {:host => 'lvho.st', :port => 12321, :io_reactor => io_reactor}
       end
 
       let :io_reactor do
@@ -72,36 +72,36 @@ module Cql
           end
 
           it 'connects to all hosts' do
-            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.lvho.st h2.lvho.st h3.lvho.st]))
             c.connect.get
             connections.should have(3).items
           end
 
           it 'connects to all hosts, when given as a comma-sepatated string' do
-            c = described_class.new(connection_options.merge(:host => 'h1.example.com,h2.example.com,h3.example.com'))
+            c = described_class.new(connection_options.merge(:host => 'h1.lvho.st,h2.lvho.st,h3.lvho.st'))
             c.connect.get
             connections.should have(3).items
           end
 
           it 'only connects to each host once' do
-            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h2.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.lvho.st h2.lvho.st h2.lvho.st]))
             c.connect.get
             connections.should have(2).items
           end
 
           it 'succeeds even if only one of the connections succeeded' do
-            io_reactor.node_down('h1.example.com')
-            io_reactor.node_down('h3.example.com')
-            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h2.example.com]))
+            io_reactor.node_down('h1.lvho.st')
+            io_reactor.node_down('h3.lvho.st')
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.lvho.st h2.lvho.st h2.lvho.st]))
             c.connect.get
             connections.should have(1).items
           end
 
           it 'fails when all nodes are down' do
-            io_reactor.node_down('h1.example.com')
-            io_reactor.node_down('h2.example.com')
-            io_reactor.node_down('h3.example.com')
-            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h2.example.com]))
+            io_reactor.node_down('h1.lvho.st')
+            io_reactor.node_down('h2.lvho.st')
+            io_reactor.node_down('h3.lvho.st')
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.lvho.st h2.lvho.st h2.lvho.st]))
             expect { c.connect.get }.to raise_error(Io::ConnectionError)
           end
         end
@@ -112,7 +112,7 @@ module Cql
 
         it 'connects to the right host and port' do
           client.connect.get
-          last_connection.host.should == 'example.com'
+          last_connection.host.should == 'lvho.st'
           last_connection.port.should == 12321
         end
 
@@ -131,7 +131,7 @@ module Cql
           io_reactor.stop.get
           io_reactor.start.get
 
-          c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
+          c = described_class.new(connection_options.merge(:hosts => %w[h1.lvho.st h2.lvho.st h3.lvho.st]))
           c.connect.get
           connections.each do |cc|
             cc.requests.first.should be_a(Protocol::StartupRequest)
@@ -381,7 +381,7 @@ module Cql
           io_reactor.stop.get
           io_reactor.start.get
 
-          c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
+          c = described_class.new(connection_options.merge(:hosts => %w[h1.lvho.st h2.lvho.st h3.lvho.st]))
           c.connect.get
 
           c.use('system').get
@@ -480,7 +480,7 @@ module Cql
               end
             end
 
-            c = described_class.new(connection_options.merge(:hosts => %w[h1.example.com h2.example.com h3.example.com]))
+            c = described_class.new(connection_options.merge(:hosts => %w[h1.lvho.st h2.lvho.st h3.lvho.st]))
             c.connect.get
 
             c.execute('USE system', :one).get

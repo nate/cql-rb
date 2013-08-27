@@ -7,7 +7,7 @@ module Cql
   module Io
     describe Connection do
       let :handler do
-        described_class.new('example.com', 55555, 5, unblocker, clock, socket_impl)
+        described_class.new('localhost', 55555, 5, unblocker, clock, socket_impl)
       end
 
       let :unblocker do
@@ -28,7 +28,7 @@ module Cql
 
       before do
         socket_impl.stub(:getaddrinfo).
-          with('example.com', 55555, nil, Socket::SOCK_STREAM).
+          with('localhost', 55555, nil, Socket::SOCK_STREAM).
           and_return([[nil, 'PORT', nil, 'IP1', 'FAMILY1', 'TYPE1'], [nil, 'PORT', nil, 'IP2', 'FAMILY2', 'TYPE2']])
         socket_impl.stub(:sockaddr_in).
           with('PORT', 'IP1').
@@ -441,7 +441,7 @@ module Cql
           end
 
           it 'includes the host and port' do
-            handler.to_s.should include('example.com:55555')
+            handler.to_s.should include('localhost:55555')
           end
 
           it 'includes the connection state' do

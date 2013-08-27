@@ -384,7 +384,7 @@ describe 'Protocol parsing and communication' do
     it 'raises an exception when it cannot connect to Cassandra' do
       io_reactor = Cql::Io::IoReactor.new(Cql::Protocol::CqlProtocolHandler)
       io_reactor.start.get
-      expect { io_reactor.connect('example.com', 9042, 0.1).get }.to raise_error(Cql::Io::ConnectionError)
+      expect { io_reactor.connect('localhost', 9042, 0.1).get }.to raise_error(Cql::Io::ConnectionError)
       expect { io_reactor.connect('blackhole', 9042, 0.1).get }.to raise_error(Cql::Io::ConnectionError)
       io_reactor.stop.get
     end
